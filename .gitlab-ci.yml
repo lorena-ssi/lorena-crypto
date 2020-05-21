@@ -1,0 +1,7 @@
+image: node:12
+
+all_tests:
+  script:
+    - yarn
+    - yarn lint
+    - yarn coverage
