@@ -15,54 +15,58 @@ const crypto = new LorenaCrypto(true)
 describe('LorenaCrypto', function () {
   // Keypairs.
   describe('1. KeyPair generation: ', () => {
-    it('Should create a new KeyPair: ', async () => {
-      alice = await crypto.newKeyPair()
+    it('Should create a new KeyPair: ', () => {
+      alice = crypto.newKeyPair()
       assert.isNotEmpty(alice.mnemonic)
       const mnemArray = alice.mnemonic.split(' ')
       assert.equal(mnemArray.length, 12)
-
       assert.isNotEmpty(alice.keyPair.publicKey)
       assert.equal(alice.keyPair.publicKey.length, 32)
       assert.isNotEmpty(alice.keyPair.secretKey)
       assert.equal(alice.keyPair.secretKey.length, 64)
     })
+
+    it('Should create a KeyPair from a Seed: ', () => {
+      const bob  = crypto.keyPairFromSeed(alice.mnemonic)
+      assert.equal(alice.keyPair.secretKey.toString, bob.keyPair.secretKey.toString)
+    })
   })
 
   describe('2. Hash Blake2: ', () => {
-    it('Should hash a String: ', async () => {
-      const result = await crypto.blake2('Hello world')
+    it('Should hash a String: ', () => {
+      const result = crypto.blake2('Hello world')
       assert.isNotEmpty(result)
     })
   })
 
   describe('3. Random: ', () => {
-    it('Should create a random String: ', async () => {
-      rnd = await crypto.random()
+    it('Should create a random String: ', () => {
+      rnd = crypto.random()
       assert.isNotEmpty(rnd)
       assert.equal(rnd.length, 32)
-      rnd = await crypto.random(16)
+      rnd = crypto.random(16)
       assert.equal(rnd.length, 16)
-      rnd = await crypto.random(8)
+      rnd = crypto.random(8)
       assert.equal(rnd.length, 8)
     })
 
-    it('Should create a random PIN: ', async () => {
-      rnd = await crypto.randomPin()
+    it('Should create a random PIN: ', () => {
+      rnd = crypto.randomPin()
       assert.isNotEmpty(rnd)
       assert.equal(rnd.length, 6)
-      rnd = await crypto.randomPin(4)
+      rnd = crypto.randomPin(4)
       assert.equal(rnd.length, 4)
     })
   })
 
   describe('4. Signatures: ', () => {
-    it('Should create a new Signature: ', async () => {
-      signature = await crypto.signMessage(message, alice.keyPair)
+    it('Should create a new Signature: ', () => {
+      signature = crypto.signMessage(message, alice.keyPair)
       assert.isNotEmpty(signature)
     })
 
-    it('Should Check the Signature: ', async () => {
-      const check = await crypto.checkSignature(message, signature, alice.keyPair.publicKey)
+    it('Should Check the Signature: ', () => {
+      const check = crypto.checkSignature(message, signature, alice.keyPair.publicKey)
       assert.equal(check, true)
     })
   })
