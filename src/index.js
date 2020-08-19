@@ -1,6 +1,6 @@
 'use strict'
 
-const { mnemonicGenerate, mnemonicToSeed, naclDecrypt, naclEncrypt } = require('@polkadot/util-crypto')
+const { mnemonicGenerate, mnemonicToMiniSecret, naclDecrypt, naclEncrypt } = require('@polkadot/util-crypto')
 const { stringToU8a, u8aConcat, u8aToHex, hexToU8a, hexToString } = require('@polkadot/util')
 const { randomAsU8a, naclKeypairFromSeed, naclSign, naclVerify, blake2AsHex } = require('@polkadot/util-crypto')
 
@@ -15,7 +15,7 @@ module.exports = class LorenaCrypto {
    */
   newKeyPair () {
     const mnemonic = mnemonicGenerate()
-    const keyPair = naclKeypairFromSeed(mnemonicToSeed(mnemonic))
+    const keyPair = naclKeypairFromSeed(mnemonicToMiniSecret(mnemonic))
     return ({ mnemonic, keyPair })
   }
 
@@ -25,7 +25,7 @@ module.exports = class LorenaCrypto {
    * @returns {Promise} Return a promise with the execution of the creation.
    */
   keyPairFromSeed (mnemonic) {
-    const keyPair = naclKeypairFromSeed(mnemonicToSeed(mnemonic))
+    const keyPair = naclKeypairFromSeed(mnemonicToMiniSecret(mnemonic))
     return ({ mnemonic, keyPair })
   }
 
